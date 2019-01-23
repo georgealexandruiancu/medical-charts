@@ -104,23 +104,20 @@ function appendDataArrays(oJS) {
     //     }
     // }
     for (let i = 1; i < oJS.length; i++) {
-
+        let lessionArr = [];
         for (let indexL1 = 1; indexL1 <= 16; indexL1++) {
-            let lessionArr = [];
             for (let indexL2 = 1; indexL2 <= 5; indexL2++) {
                 //    let key =  "lesion " + i + "." + j
-                lessionArr[i].push({
+                lessionArr.push({
                     ["lesion " + indexL1 + "." + indexL2]: 
                         {
                             data: ""
                         }
                 })
             }
-            Object.assign(lessionArr, objectWithLesions);
+            objectWithLesions[i] = lessionArr
         }
-        for (let j = 4; j < oJS[i].length; j++) {
-                // objectWithLesions[i].lesion.data = oJS[i][j]s
-        }
+       
     }
     console.log(objectWithLesions)
 
