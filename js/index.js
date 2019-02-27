@@ -4,13 +4,59 @@ var dataTable;
 var modals;
 var verify = false;
 var objectWithLesions = {};
+var objTestChart = [];
 $(function () {
     oFileIn = document.getElementById("datasetRAW");
     if (oFileIn.addEventListener) {
         oFileIn.addEventListener('change', filePicked, false);
     }
 });
-
+function getChart(oJS){
+    let arrayChart = [];
+    for(let i=2;i<=oJS.length;i++){
+        if(oJS[i] !== "-"){
+            arrayChart.append(oJS[i]);
+        }
+    }
+    console.log(arrayChart);
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
 function filePicked(oEvent) {
     document.getElementById('dataTable').innerHTML = ""
     document.getElementById('modalContainer').innerHTML = ""
@@ -31,8 +77,7 @@ function filePicked(oEvent) {
             var oJS = XLS.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1 });
             console.log(oJS)
             var tableHeader = document.getElementById('headerTable');
-            // var dataTable = document.getElementById('dataTable');
-
+           
             for (let i = 0; i < oJS[0].length; i++) {
                 if (oJS[0][i] === "Slice# polyp Prone") {
                     oJS[0][i] = "Polyp Prone";
@@ -89,6 +134,7 @@ function filePicked(oEvent) {
                     bodyData.innerHTML = oJS[i][0];
                 }
                 appendDataArrays(oJS)
+                getChart(oJS);
             }, 3000);
         })
 
@@ -97,12 +143,6 @@ function filePicked(oEvent) {
 }
 
 function appendDataArrays(oJS) {
-    // for (let i = 1; i <= 16; i++) {
-    //     for (let j = 1; j <= 5; j++) {
-    //         //    let key =  "lesion " + i + "." + j
-    //         objectWithLesions["lesion " + i + "." + j] = ""
-    //     }
-    // }
     for (let i = 1; i < oJS.length; i++) {
         let lessionArr = [];
         for (let indexL1 = 1; indexL1 <= 16; indexL1++) {
@@ -117,8 +157,8 @@ function appendDataArrays(oJS) {
             }
             objectWithLesions[i] = lessionArr
         }
-       
     }
     console.log(objectWithLesions)
 
 }
+
